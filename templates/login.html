@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Matrix Login</title>
+    <style>
+        body { background: #121212; color: #00ff00; font-family: monospace; display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; margin: 0; }
+        .login-box { border: 2px solid #00ff00; padding: 30px; border-radius: 8px; box-shadow: 0 0 20px rgba(0,255,0,0.2); text-align: center; }
+        input { display: block; margin: 10px auto; padding: 10px; background: #222; border: 1px solid #00ff00; color: #00ff00; border-radius: 4px; }
+        button { background: #00ff00; color: black; border: none; padding: 10px 20px; font-weight: bold; cursor: pointer; border-radius: 4px; }
+        button:hover { background: #008800; }
+    </style>
+</head>
+<body>
+    <div class="login-box">
+        <h1>ACCESS REQUIRED</h1>
+        <form method="POST">
+            <input type="text" name="username" placeholder="Välj ett namn" required>
+            <input type="password" name="password" placeholder="Lösenord" required>
+            <button type="submit">ENTER THE MATRIX</button>
+        </form>
+    </div>
+</body>
+</html>

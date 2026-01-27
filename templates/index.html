@@ -1,0 +1,465 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Ultimata Matrix Chatten</title>
+    <style>
+        /* Grundläggande stil för hela sidan */
+        body { 
+            font-family: 'Courier New', Courier, monospace; 
+            display: flex; 
+            flex-direction: column; 
+            align-items: center; 
+            background: #121212; 
+            color: white; 
+            padding-top: 20px; 
+            overflow: hidden; 
+            position: relative; 
+        }
+
+        /* Matrix-regn bakgrund */
+        #matrix-rain {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #121212;
+            z-index: -1;
+            opacity: 0.6;
+        }
+
+        /* Rubrik-styling */
+        #chat-header {
+            font-size: 2.5em;
+            letter-spacing: 5px;
+            color: #00ff00;
+            text-transform: uppercase;
+            text-shadow: 0 0 5px #00ff00, 0 0 15px #00ff00;
+            margin-top: 20px;
+            margin-bottom: 20px;
+            animation: flicker 2s infinite alternate;
+            z-index: 1;
+        }
+
+        @keyframes flicker {
+            0%, 18%, 22%, 25%, 53%, 57%, 100% { text-shadow: 0 0 5px #00ff00, 0 0 15px #00ff00; }
+            20%, 24%, 55% { text-shadow: none; color: #003300; }
+        }
+
+        /* CHATTRUTAN */
+        #chat { 
+            border: 2px solid #00ff00; 
+            box-shadow: 0 0 15px rgba(0, 255, 0, 0.2);
+            width: 500px; 
+            height: 450px; 
+            overflow-y: scroll; 
+            background: rgba(18, 18, 18, 0.9); 
+            padding: 15px; 
+            margin-bottom: 15px; 
+            border-radius: 8px; 
+            z-index: 1;
+        }
+
+        /* --- NY SVART SCROLL-LIST --- */
+        #chat::-webkit-scrollbar {
+            width: 10px;
+        }
+        #chat::-webkit-scrollbar-track {
+            background: #121212;
+            border-radius: 8px;
+        }
+        #chat::-webkit-scrollbar-thumb {
+            background: #333;
+            border: 2px solid #121212;
+            border-radius: 8px;
+        }
+        #chat::-webkit-scrollbar-thumb:hover {
+            background: #00ff00;
+        }
+
+        /* Meddelande-styling */
+        .msg-line { 
+            display: flex;
+            align-items: flex-start;
+            flex-wrap: wrap;
+            margin-bottom: 8px; 
+            border-bottom: 1px solid rgba(0, 255, 0, 0.1); 
+            padding-bottom: 4px; 
+            font-size: 0.85em;
+        }
+
+        .time-label { 
+            color: #888; 
+            font-size: 0.8em; 
+            margin-right: 8px; 
+            white-space: nowrap;
+        }
+
+        .user-label { 
+            color: #00ff00; 
+            font-weight: bold; 
+            margin-right: 8px; 
+            white-space: nowrap;
+        }
+
+        .msg-content {
+            flex: 1;
+            word-break: break-all;
+            color: #e0e0e0;
+        }
+
+        /* Kontroller */
+        .controls { 
+            display: flex; 
+            flex-direction: column; 
+            gap: 10px; 
+            width: 530px; 
+            z-index: 1;
+        }
+
+        .user-badge {
+            display: inline-flex;
+            align-items: center;
+            background: rgba(0, 20, 0, 0.7);
+            border: 1px solid rgba(0, 255, 0, 0.3);
+            border-radius: 4px;
+            padding: 4px 12px; /* Lite mer luft på sidorna om namnet */
+            margin-bottom: 8px;
+        }
+
+        #username { 
+            background: transparent; 
+            color: #00ff00; 
+            border: none; 
+            font-weight: bold; 
+            font-size: 1em;
+            font-family: 'Courier New', monospace;
+            outline: none;
+            width: auto;
+            text-transform: uppercase;
+            cursor: default;
+            padding: 0;
+            margin: 0;
+            letter-spacing: 1px;
+        }
+
+        #digital-clock {
+            color: #00ff00;
+            font-family: 'Courier New', monospace;
+            font-size: 1.1em;
+            font-weight: bold;
+            letter-spacing: 2px;
+            text-shadow: 0 0 10px rgba(0, 255, 0, 0.5);
+            margin-bottom: 8px;
+        }
+
+        .input-group { 
+            display: flex; 
+            gap: 15px;      /* Lite mer mellanrum mellan ruta och knapp */
+            align-items: stretch; /* Tvingar dem att vara precis lika höga */
+        }
+
+        #user_input { 
+            background: rgba(0, 0, 0, 0.85); /* Solid svart men med en hint av genomskinlighet */
+            border: 2px solid #00ff00;       /* Tjockare neonram */
+            color: #ffffff;                  /* vit textfärg för bättre kontrast */
+            padding: 18px;                   /* Gör rutan högre/större */
+            border-radius: 8px;              /* Lite mjukare hörn */
+            flex: 1; 
+            font-size: 1.1em;                /* Större text för bättre läsbarhet */
+            font-family: 'Courier New', monospace;
+            outline: none;
+            box-shadow: 0 0 10px rgba(0, 255, 0, 0.1); /* Svag yttre glöd */
+            transition: all 0.3s ease;
+        }
+
+        /* När du klickar i rutan */
+        #user_input:focus { 
+            background: rgba(0, 5, 0, 0.95); /* Blir nästan helt svart vid fokus */
+            box-shadow: 0 0 20px rgba(0, 255, 0, 0.4); /* Starkare glöd */
+            transform: translateY(-2px);    /* Lyfter rutan lite snyggt */
+        }
+
+        /* Styling för hjälptexten */
+        #user_input::placeholder {
+            color: rgba(0, 255, 0, 0.4);
+        }
+
+        button { 
+            padding: 10px 20px; 
+            border: none; 
+            border-radius: 4px; 
+            cursor: pointer; 
+            font-weight: bold; 
+            text-transform: uppercase;
+        }
+
+        .send-btn { 
+            background: #000;          
+            color: #00ff00;            
+            border: 2px solid #00ff00; 
+            padding: 0 30px;           /* Mer luft på sidorna */
+            height: 60px;              /* Matchar höjden på den nya stora textrutan */
+            border-radius: 8px;        /* Samma hörnradie som rutan */
+            cursor: pointer; 
+            font-weight: bold; 
+            text-transform: uppercase;
+            font-family: 'Courier New', monospace;
+            font-size: 1.1em;
+            box-shadow: 0 0 5px #00ff00;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .send-btn:hover {
+            background: #00ff00; 
+            color: #000; 
+            box-shadow: 0 0 25px #00ff00; 
+            transform: translateY(-2px); /* Lyfter knappen ihop med rutan */
+        }
+
+        .send-btn:active {
+            transform: translateY(0) scale(0.95);
+        }
+
+        .clear-btn { 
+            background: #000;
+            color: #ff4444;
+            border: 1px solid #ff4444;
+            padding: 8px 15px; 
+            font-size: 0.75em;
+            font-family: 'Courier New', monospace;
+            cursor: pointer;
+            text-transform: uppercase;
+            transition: all 0.3s ease;
+            box-shadow: 0 0 3px #ff4444;
+            margin-top: 20px;
+            opacity: 0.8;
+        }
+        .clear-btn:hover { 
+            background: #ff4444;
+            color: #000;
+            box-shadow: 0 0 15px #ff4444;
+            opacity: 1;
+        }
+        .clear-btn:active { transform: scale(0.95); } 
+        
+        
+        .modal {
+            display: none; 
+            position: fixed;
+            z-index: 100;
+            left: 0; top: 0;
+            width: 100%; height: 100%;
+            background-color: rgba(0, 0, 0, 0.85);
+            backdrop-filter: blur(5px); 
+        }
+
+        .modal-content {
+            background-color: #000;
+            margin: 15% auto;
+            padding: 30px;
+            border: 2px solid #ff4444;
+            box-shadow: 0 0 20px #ff4444;
+            width: 350px;
+            text-align: center;
+            color: #ff4444;
+            font-family: 'Courier New', monospace;
+        }
+
+        .modal-content h3 { animation: alert-flicker 1s infinite;}
+
+        @keyframes alert-flicker {
+            0% { opacity: 1; text-shadow: 0 0 10px #ff4444; }
+            50% { opacity: 0.5; text-shadow: none; }
+            100% { opacity: 1; text-shadow: 0 0 10px #ff4444; }
+        }
+
+        .modal-buttons { margin-top: 25px; display: flex; justify-content: space-around; }
+
+        .confirm-btn, .cancel-btn {
+            padding: 10px 20px;
+            cursor: pointer;
+            font-weight: bold;
+            border: 1px solid #ff4444;
+            background: transparent;
+            color: #ff4444;
+        }
+
+        .confirm-btn:hover { background: #ff4444; color: #000; }
+        .cancel-btn { border-color: #888; color: #888; }
+        .cancel-btn:hover { background: #444; color: #fff; }
+
+        .self-label {
+            color: #fff !important; /* Vit text för att bryta av */
+            text-shadow: 0 0 10px #00ff00, 0 0 20px #00ff00; /* Kraftig neongrön glöd */
+            font-weight: 900;
+            letter-spacing: 1px;
+        }
+
+    </style>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js"></script>
+</head>
+<body>
+    <div id="matrix-rain"></div>
+    
+    <h2 id="chat-header">MATRIX CHATT</h2>
+    
+    <div id="chat"></div>
+    
+    <div class="controls">
+        <div style="display: flex; justify-content: space-between; align-items: flex-end; width: 100%;">
+            <div class="user-badge">
+                <input id="username" type="text" value="{{ username }}" readonly>
+            </div>
+            <div id="digital-clock">00:00:00</div>
+        </div>
+        
+        <div class="input-group">
+            <input id="user_input" type="text" placeholder="Skriv ett meddelande..." autofocus>
+            <button class="send-btn" onclick="sendMessage()">Skicka</button>
+        </div>
+
+        <button class="clear-btn" onclick="clearChat()">Rensa chatten för alla</button>
+    </div>
+
+    <div id="custom-modal" class="modal">
+        <div class="modal-content">
+            <h3 style="color: #ff4444; margin-top: 0;">SYSTEM VARNING</h3>
+            <p>Är du säker på att du vill radera all chatt historik?</p>
+            <div class="modal-buttons">
+                <button class="confirm-btn" onclick="executeClear()">BEKRÄFTA</button>
+                <button class="cancel-btn" onclick="closeModal()">AVBRYT</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        var socket = io();
+        var notificationSound = new Audio('https://actions.google.com/sounds/v1/alarms/beep_short.ogg');
+        var warningSound = new Audio('/static/alarm.mp3');
+        warningSound.loop = true;
+
+        function addMessage(data) {
+            var chatDiv = document.getElementById('chat');
+            var item = document.createElement('div');
+            item.className = 'msg-line';
+            
+            // Hämta ditt nuvarande namn för att jämföra
+            var currentUserName = document.getElementById('username').value;
+            
+            // Om det är du som skrivit, lägg till klassen 'self-label', annars kör vanlig 'user-label'
+            var labelClass = (data.user === currentUserName) ? 'user-label self-label' : 'user-label';
+            
+            item.innerHTML = `
+                <span class="time-label">[${data.time || '--:--'}]</span>
+                <span class="${labelClass}">${data.user}:</span>
+                <span class="msg-content">${data.msg}</span>
+            `;
+            
+            chatDiv.appendChild(item);
+            chatDiv.scrollTop = chatDiv.scrollHeight; 
+        }
+
+        socket.on('history', function(history) {
+            document.getElementById('chat').innerHTML = '';
+            history.forEach(addMessage);
+        });
+
+        socket.on('message', function(data) {
+            addMessage(data);
+            notificationSound.play().catch(() => {});
+        });
+
+        socket.on('chat_cleared', function() {
+            document.getElementById('chat').innerHTML = '';
+        });
+
+        function sendMessage() {
+            var nameInput = document.getElementById('username');
+            var msgInput = document.getElementById('user_input');
+            
+            if (msgInput.value.trim() !== "") {
+                socket.emit('message', {
+                    user: nameInput.value,
+                    msg: msgInput.value
+                });
+                msgInput.value = '';
+            }
+        }
+
+        function clearChat() {
+            // 1. Spela ljudet
+            warningSound.play().catch(function(error) {
+                console.log("Ljudet kunde inte spelas: ", error);
+            });
+            
+            // 2. Visa din snygga Matrix-ruta (modalen)
+            document.getElementById('custom-modal').style.display = 'block';
+        }
+
+        function closeModal() {
+            // Stäng modalen
+            document.getElementById('custom-modal').style.display = 'none';
+            
+            // STOPPA ljudet när rutan stängs
+            warningSound.pause();
+            warningSound.currentTime = 0;
+        }
+
+        function executeClear() {
+            socket.emit('clear_chat');
+            closeModal(); // Anropar closeModal så ljudet tystnar även här
+        }
+
+        document.getElementById('user_input').addEventListener('keypress', function (e) {
+            if (e.key === 'Enter') sendMessage();
+        });
+
+        function updateClock() {
+            const now = new Date();
+            const h = String(now.getHours()).padStart(2, '0');
+            const m = String(now.getMinutes()).padStart(2, '0');
+            const s = String(now.getSeconds()).padStart(2, '0');
+            document.getElementById('digital-clock').textContent = `${h}:${m}:${s}`;
+        }
+        setInterval(updateClock, 1000);
+        updateClock();
+
+        // --- MATRIX-REGNET ---
+        const matrixContainer = document.getElementById('matrix-rain');
+        const canvas = document.createElement('canvas');
+        const ctx = canvas.getContext('2d');
+        matrixContainer.appendChild(canvas);
+
+        let width = canvas.width = window.innerWidth;
+        let height = canvas.height = window.innerHeight;
+        const font_size = 16;
+        const columns = width / font_size;
+        const drops = Array(Math.floor(columns)).fill(1);
+        const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789@#$%^&*';
+
+        function draw() {
+            ctx.fillStyle = 'rgba(18, 18, 18, 0.05)';
+            ctx.fillRect(0, 0, width, height);
+            ctx.fillStyle = '#00ff00';
+            ctx.font = font_size + 'px monospace';
+
+            for (let i = 0; i < drops.length; i++) {
+                const text = chars[Math.floor(Math.random() * chars.length)];
+                ctx.fillText(text, i * font_size, drops[i] * font_size);
+                if (drops[i] * font_size > height && Math.random() > 0.975) drops[i] = 0;
+                drops[i]++;
+            }
+        }
+        setInterval(draw, 33);
+
+        window.addEventListener('resize', () => {
+            width = canvas.width = window.innerWidth;
+            height = canvas.height = window.innerHeight;
+        });
+    </script>
+</body>
+</html>
