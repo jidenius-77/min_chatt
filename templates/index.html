@@ -41,6 +41,7 @@
             z-index: 1;
         }
 
+        /* Flicker-animation för rubriken */
         @keyframes flicker {
             0%, 18%, 22%, 25%, 53%, 57%, 100% { text-shadow: 0 0 5px #00ff00, 0 0 15px #00ff00; }
             20%, 24%, 55% { text-shadow: none; color: #003300; }
@@ -60,7 +61,7 @@
             z-index: 1;
         }
 
-        /* --- NY SVART SCROLL-LIST --- */
+        /* SCROLL-LIST */
         #chat::-webkit-scrollbar {
             width: 10px;
         }
@@ -88,6 +89,7 @@
             font-size: 0.85em;
         }
 
+        /* Etiketter för tid och användare */
         .time-label { 
             color: #888; 
             font-size: 0.8em; 
@@ -95,6 +97,7 @@
             white-space: nowrap;
         }
 
+        /* Användaretikett */
         .user-label { 
             color: #00ff00; 
             font-weight: bold; 
@@ -102,6 +105,7 @@
             white-space: nowrap;
         }
 
+        /* Meddelandeinnehåll */
         .msg-content {
             flex: 1;
             word-break: break-all;
@@ -117,16 +121,18 @@
             z-index: 1;
         }
 
+        /* Användarbadge och namn */
         .user-badge {
             display: inline-flex;
             align-items: center;
             background: rgba(0, 20, 0, 0.7);
             border: 1px solid rgba(0, 255, 0, 0.3);
             border-radius: 4px;
-            padding: 4px 12px; /* Lite mer luft på sidorna om namnet */
+            padding: 4px 12px; 
             margin-bottom: 8px;
         }
 
+        /* Användarnamn i badgen */
         #username { 
             background: transparent; 
             color: #00ff00; 
@@ -143,6 +149,7 @@
             letter-spacing: 1px;
         }
 
+        /* Digital klocka */
         #digital-clock {
             color: #00ff00;
             font-family: 'Courier New', monospace;
@@ -153,31 +160,33 @@
             margin-bottom: 8px;
         }
 
+        /* Inmatningsgrupp */
         .input-group { 
             display: flex; 
-            gap: 15px;      /* Lite mer mellanrum mellan ruta och knapp */
-            align-items: stretch; /* Tvingar dem att vara precis lika höga */
+            gap: 15px;      
+            align-items: stretch; 
         }
 
+        /* Inmatningsruta för meddelanden */
         #user_input { 
-            background: rgba(0, 0, 0, 0.85); /* Solid svart men med en hint av genomskinlighet */
-            border: 2px solid #00ff00;       /* Tjockare neonram */
-            color: #ffffff;                  /* vit textfärg för bättre kontrast */
-            padding: 18px;                   /* Gör rutan högre/större */
-            border-radius: 8px;              /* Lite mjukare hörn */
+            background: rgba(0, 0, 0, 0.85); 
+            border: 2px solid #00ff00;       
+            color: #ffffff;                  
+            padding: 18px;                   
+            border-radius: 8px;              
             flex: 1; 
-            font-size: 1.1em;                /* Större text för bättre läsbarhet */
+            font-size: 1.1em;                
             font-family: 'Courier New', monospace;
             outline: none;
-            box-shadow: 0 0 10px rgba(0, 255, 0, 0.1); /* Svag yttre glöd */
+            box-shadow: 0 0 10px rgba(0, 255, 0, 0.1); 
             transition: all 0.3s ease;
         }
 
         /* När du klickar i rutan */
         #user_input:focus { 
-            background: rgba(0, 5, 0, 0.95); /* Blir nästan helt svart vid fokus */
-            box-shadow: 0 0 20px rgba(0, 255, 0, 0.4); /* Starkare glöd */
-            transform: translateY(-2px);    /* Lyfter rutan lite snyggt */
+            background: rgba(0, 5, 0, 0.95);
+            box-shadow: 0 0 20px rgba(0, 255, 0, 0.4); 
+            transform: translateY(-2px);
         }
 
         /* Styling för hjälptexten */
@@ -185,6 +194,7 @@
             color: rgba(0, 255, 0, 0.4);
         }
 
+        /* Knappar */
         button { 
             padding: 10px 20px; 
             border: none; 
@@ -194,13 +204,14 @@
             text-transform: uppercase;
         }
 
+        /* Skicka-knappen */
         .send-btn { 
-            background: #000;          
-            color: #00ff00;            
+            background: #000;
+            color: #00ff00; 
             border: 2px solid #00ff00; 
-            padding: 0 30px;           /* Mer luft på sidorna */
-            height: 60px;              /* Matchar höjden på den nya stora textrutan */
-            border-radius: 8px;        /* Samma hörnradie som rutan */
+            padding: 0 30px;
+            height: 60px;
+            border-radius: 8px;
             cursor: pointer; 
             font-weight: bold; 
             text-transform: uppercase;
@@ -213,17 +224,20 @@
             justify-content: center;
         }
 
+        /* Hover-effekt för skicka-knappen */
         .send-btn:hover {
             background: #00ff00; 
             color: #000; 
             box-shadow: 0 0 25px #00ff00; 
-            transform: translateY(-2px); /* Lyfter knappen ihop med rutan */
+            transform: translateY(-2px); 
         }
 
+        /* Active-effekt för skicka-knappen */
         .send-btn:active {
             transform: translateY(0) scale(0.95);
         }
 
+        /* Rensa chatt-knappen */
         .clear-btn { 
             background: #000;
             color: #ff4444;
@@ -238,15 +252,19 @@
             margin-top: 20px;
             opacity: 0.8;
         }
+
+        /* Hover-effekt för rensa chatt-knappen */
         .clear-btn:hover { 
             background: #ff4444;
             color: #000;
             box-shadow: 0 0 15px #ff4444;
             opacity: 1;
         }
+        
+        /* Active-effekt för rensa chatt-knappen */
         .clear-btn:active { transform: scale(0.95); } 
         
-        
+        /* Anpassad modal för bekräftelse vid rensning */
         .modal {
             display: none; 
             position: fixed;
@@ -257,6 +275,7 @@
             backdrop-filter: blur(5px); 
         }
 
+        /* Innehåll i modalen */
         .modal-content {
             background-color: #000;
             margin: 15% auto;
@@ -269,16 +288,20 @@
             font-family: 'Courier New', monospace;
         }
 
+        /* Varningstext i modalen */
         .modal-content h3 { animation: alert-flicker 1s infinite;}
 
+        /* Animation för varningstext */
         @keyframes alert-flicker {
             0% { opacity: 1; text-shadow: 0 0 10px #ff4444; }
             50% { opacity: 0.5; text-shadow: none; }
             100% { opacity: 1; text-shadow: 0 0 10px #ff4444; }
         }
 
+        /* Knappar i modalen */
         .modal-buttons { margin-top: 25px; display: flex; justify-content: space-around; }
 
+        /* Bekräfta och avbryt knappar */
         .confirm-btn, .cancel-btn {
             padding: 10px 20px;
             cursor: pointer;
@@ -288,13 +311,15 @@
             color: #ff4444;
         }
 
+        /* Hover-effekter för modalknappar */
         .confirm-btn:hover { background: #ff4444; color: #000; }
         .cancel-btn { border-color: #888; color: #888; }
         .cancel-btn:hover { background: #444; color: #fff; }
 
+        /* Stil för användarens egna meddelanden */
         .self-label {
-            color: #fff !important; /* Vit text för att bryta av */
-            text-shadow: 0 0 10px #00ff00, 0 0 20px #00ff00; /* Kraftig neongrön glöd */
+            color: #fff !important; 
+            text-shadow: 0 0 10px #00ff00, 0 0 20px #00ff00; 
             font-weight: 900;
             letter-spacing: 1px;
         }
@@ -342,15 +367,16 @@
         var warningSound = new Audio('/static/alarm.mp3');
         warningSound.loop = true;
 
+        /* Lägg till meddelande i chattrutan */
         function addMessage(data) {
             var chatDiv = document.getElementById('chat');
             var item = document.createElement('div');
             item.className = 'msg-line';
             
-            // Hämta ditt nuvarande namn för att jämföra
+            
             var currentUserName = document.getElementById('username').value;
             
-            // Om det är du som skrivit, lägg till klassen 'self-label', annars kör vanlig 'user-label'
+            
             var labelClass = (data.user === currentUserName) ? 'user-label self-label' : 'user-label';
             
             item.innerHTML = `
@@ -377,6 +403,7 @@
             document.getElementById('chat').innerHTML = '';
         });
 
+        /* Skicka meddelande-funktion */
         function sendMessage() {
             var nameInput = document.getElementById('username');
             var msgInput = document.getElementById('user_input');
@@ -390,34 +417,33 @@
             }
         }
 
+        /* Rensa chatt-funktion */
         function clearChat() {
-            // 1. Spela ljudet
             warningSound.play().catch(function(error) {
                 console.log("Ljudet kunde inte spelas: ", error);
             });
-            
-            // 2. Visa din snygga Matrix-ruta (modalen)
             document.getElementById('custom-modal').style.display = 'block';
         }
 
+        /* Stäng modal-funktion */
         function closeModal() {
-            // Stäng modalen
             document.getElementById('custom-modal').style.display = 'none';
             
-            // STOPPA ljudet när rutan stängs
             warningSound.pause();
             warningSound.currentTime = 0;
         }
 
+        /* Utför rensning av chatten */
         function executeClear() {
             socket.emit('clear_chat');
-            closeModal(); // Anropar closeModal så ljudet tystnar även här
+            closeModal();
         }
 
         document.getElementById('user_input').addEventListener('keypress', function (e) {
             if (e.key === 'Enter') sendMessage();
         });
 
+        /* DIGITAL KLOCKA */
         function updateClock() {
             const now = new Date();
             const h = String(now.getHours()).padStart(2, '0');
@@ -428,7 +454,7 @@
         setInterval(updateClock, 1000);
         updateClock();
 
-        // --- MATRIX-REGNET ---
+        /* Matrix-regnet */
         const matrixContainer = document.getElementById('matrix-rain');
         const canvas = document.createElement('canvas');
         const ctx = canvas.getContext('2d');
@@ -441,6 +467,7 @@
         const drops = Array(Math.floor(columns)).fill(1);
         const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789@#$%^&*';
 
+        /* funktionen för matrix-regnet */
         function draw() {
             ctx.fillStyle = 'rgba(18, 18, 18, 0.05)';
             ctx.fillRect(0, 0, width, height);
