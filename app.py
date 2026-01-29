@@ -15,7 +15,7 @@ def index():
         password_attempt = request.form.get('password')
         username = request.form.get('username')
 
-        if password_attempt == 'undrom77':
+        if password_attempt == 'hemlis!':
             return render_template('index.html', username=username)
         else:
             return """
