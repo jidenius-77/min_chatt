@@ -8,6 +8,8 @@ socketio = SocketIO(app)
 
 chat_history = []
 
+# FIXA SKÄRMEN SÅ ALLT SYNS MED RENSA CHATTEN!!!!!!
+
 @app.route('/', methods=['GET', 'POST'])
 def index():
     # Autentisering
