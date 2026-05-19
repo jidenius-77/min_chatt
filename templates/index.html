@@ -1,22 +1,24 @@
 <!DOCTYPE html>
 <html>
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Ultimata Matrix Chatten</title>
     <style>
-        /* Grundläggande stil för hela sidan */
-        body { 
-            font-family: 'Courier New', Courier, monospace; 
-            display: flex; 
-            flex-direction: column; 
-            align-items: center; 
-            background: #121212; 
-            color: white; 
-            padding-top: 20px; 
-            overflow: hidden; 
-            position: relative; 
+        body {
+            font-family: 'Courier New', Courier, monospace;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background: #121212;
+            color: white;
+            min-height: 100vh;
+            padding: 20px 12px;
+            overflow-x: hidden;
+            position: relative;
+            box-sizing: border-box;
         }
 
-        /* Matrix-regn bakgrund */
         #matrix-rain {
             position: fixed;
             top: 0;
@@ -28,9 +30,8 @@
             opacity: 0.6;
         }
 
-        /* Rubrik-styling */
         #chat-header {
-            font-size: 2.5em;
+            font-size: clamp(1.7rem, 6vw, 2.5rem);
             letter-spacing: 5px;
             color: #00ff00;
             text-transform: uppercase;
@@ -41,107 +42,116 @@
             z-index: 1;
         }
 
-        /* Flicker-animation för rubriken */
         @keyframes flicker {
-            0%, 18%, 22%, 25%, 53%, 57%, 100% { text-shadow: 0 0 5px #00ff00, 0 0 15px #00ff00; }
-            20%, 24%, 55% { text-shadow: none; color: #003300; }
+            0%, 18%, 22%, 25%, 53%, 57%, 100% {
+                text-shadow: 0 0 5px #00ff00, 0 0 15px #00ff00;
+            }
+
+            20%, 24%, 55% {
+                text-shadow: none;
+                color: #003300;
+            }
         }
 
-        /* CHATTRUTAN */
-        #chat { 
-            border: 2px solid #00ff00; 
+        #chat {
+            border: 2px solid #00ff00;
             box-shadow: 0 0 15px rgba(0, 255, 0, 0.2);
-            width: 500px; 
-            height: 450px; 
-            overflow-y: scroll; 
-            background: rgba(18, 18, 18, 0.9); 
-            padding: 15px; 
-            margin-bottom: 15px; 
-            border-radius: 8px; 
+            width: min(100% - 24px, 500px);
+            height: min(58vh, 450px);
+            overflow-y: scroll;
+            background: rgba(18, 18, 18, 0.9);
+            padding: 15px;
+            margin-bottom: 15px;
+            border-radius: 8px;
             z-index: 1;
+            box-sizing: border-box;
         }
 
-        /* SCROLL-LIST */
         #chat::-webkit-scrollbar {
             width: 10px;
         }
+
         #chat::-webkit-scrollbar-track {
             background: #121212;
             border-radius: 8px;
         }
+
         #chat::-webkit-scrollbar-thumb {
             background: #333;
             border: 2px solid #121212;
             border-radius: 8px;
         }
+
         #chat::-webkit-scrollbar-thumb:hover {
             background: #00ff00;
         }
 
-        /* Meddelande-styling */
-        .msg-line { 
+        .msg-line {
             display: flex;
             align-items: flex-start;
             flex-wrap: wrap;
-            margin-bottom: 8px; 
-            border-bottom: 1px solid rgba(0, 255, 0, 0.1); 
-            padding-bottom: 4px; 
+            margin-bottom: 8px;
+            border-bottom: 1px solid rgba(0, 255, 0, 0.1);
+            padding-bottom: 4px;
             font-size: 0.85em;
         }
 
-        /* Etiketter för tid och användare */
-        .time-label { 
-            color: #888; 
-            font-size: 0.8em; 
-            margin-right: 8px; 
+        .time-label {
+            color: #888;
+            font-size: 0.8em;
+            margin-right: 8px;
             white-space: nowrap;
         }
 
-        /* Användaretikett */
-        .user-label { 
-            color: #00ff00; 
-            font-weight: bold; 
-            margin-right: 8px; 
+        .user-label {
+            color: #00ff00;
+            font-weight: bold;
+            margin-right: 8px;
             white-space: nowrap;
         }
 
-        /* Meddelandeinnehåll */
         .msg-content {
             flex: 1;
-            word-break: break-all;
+            word-break: break-word;
             color: #e0e0e0;
         }
 
-        /* Kontroller */
-        .controls { 
-            display: flex; 
-            flex-direction: column; 
-            gap: 10px; 
-            width: 530px; 
+        .controls {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            width: min(100% - 24px, 530px);
             z-index: 1;
         }
 
-        /* Användarbadge och namn */
+        .top-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            width: 100%;
+            gap: 12px;
+        }
+
         .user-badge {
             display: inline-flex;
             align-items: center;
             background: rgba(0, 20, 0, 0.7);
             border: 1px solid rgba(0, 255, 0, 0.3);
             border-radius: 4px;
-            padding: 4px 12px; 
+            padding: 4px 12px;
             margin-bottom: 8px;
+            min-width: 0;
         }
 
-        /* Användarnamn i badgen */
-        #username { 
-            background: transparent; 
-            color: #00ff00; 
-            border: none; 
-            font-weight: bold; 
+        #username {
+            background: transparent;
+            color: #00ff00;
+            border: none;
+            font-weight: bold;
             font-size: 1em;
             font-family: 'Courier New', monospace;
             outline: none;
-            width: auto;
+            width: 100%;
             text-transform: uppercase;
             cursor: default;
             padding: 0;
@@ -149,7 +159,6 @@
             letter-spacing: 1px;
         }
 
-        /* Digital klocka */
         #digital-clock {
             color: #00ff00;
             font-family: 'Courier New', monospace;
@@ -158,62 +167,58 @@
             letter-spacing: 2px;
             text-shadow: 0 0 10px rgba(0, 255, 0, 0.5);
             margin-bottom: 8px;
+            white-space: nowrap;
         }
 
-        /* Inmatningsgrupp */
-        .input-group { 
-            display: flex; 
-            gap: 15px;      
-            align-items: stretch; 
+        .input-group {
+            display: flex;
+            gap: 15px;
+            align-items: stretch;
         }
 
-        /* Inmatningsruta för meddelanden */
-        #user_input { 
-            background: rgba(0, 0, 0, 0.85); 
-            border: 2px solid #00ff00;       
-            color: #ffffff;                  
-            padding: 18px;                   
-            border-radius: 8px;              
-            flex: 1; 
-            font-size: 1.1em;                
+        #user_input {
+            background: rgba(0, 0, 0, 0.85);
+            border: 2px solid #00ff00;
+            color: #ffffff;
+            padding: 18px;
+            border-radius: 8px;
+            flex: 1;
+            font-size: 1.1em;
             font-family: 'Courier New', monospace;
             outline: none;
-            box-shadow: 0 0 10px rgba(0, 255, 0, 0.1); 
+            box-shadow: 0 0 10px rgba(0, 255, 0, 0.1);
             transition: all 0.3s ease;
+            min-width: 0;
         }
 
-        /* När du klickar i rutan */
-        #user_input:focus { 
+        #user_input:focus {
             background: rgba(0, 5, 0, 0.95);
-            box-shadow: 0 0 20px rgba(0, 255, 0, 0.4); 
+            box-shadow: 0 0 20px rgba(0, 255, 0, 0.4);
             transform: translateY(-2px);
         }
 
-        /* Styling för hjälptexten */
         #user_input::placeholder {
             color: rgba(0, 255, 0, 0.4);
         }
 
-        /* Knappar */
-        button { 
-            padding: 10px 20px; 
-            border: none; 
-            border-radius: 4px; 
-            cursor: pointer; 
-            font-weight: bold; 
+        button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
             text-transform: uppercase;
         }
 
-        /* Skicka-knappen */
-        .send-btn { 
+        .send-btn {
             background: #000;
-            color: #00ff00; 
-            border: 2px solid #00ff00; 
+            color: #00ff00;
+            border: 2px solid #00ff00;
             padding: 0 30px;
             height: 60px;
             border-radius: 8px;
-            cursor: pointer; 
-            font-weight: bold; 
+            cursor: pointer;
+            font-weight: bold;
             text-transform: uppercase;
             font-family: 'Courier New', monospace;
             font-size: 1.1em;
@@ -224,25 +229,22 @@
             justify-content: center;
         }
 
-        /* Hover-effekt för skicka-knappen */
         .send-btn:hover {
-            background: #00ff00; 
-            color: #000; 
-            box-shadow: 0 0 25px #00ff00; 
-            transform: translateY(-2px); 
+            background: #00ff00;
+            color: #000;
+            box-shadow: 0 0 25px #00ff00;
+            transform: translateY(-2px);
         }
 
-        /* Active-effekt för skicka-knappen */
         .send-btn:active {
             transform: translateY(0) scale(0.95);
         }
 
-        /* Rensa chatt-knappen */
-        .clear-btn { 
+        .clear-btn {
             background: #000;
             color: #ff4444;
             border: 1px solid #ff4444;
-            padding: 8px 15px; 
+            padding: 8px 15px;
             font-size: 0.75em;
             font-family: 'Courier New', monospace;
             cursor: pointer;
@@ -253,29 +255,29 @@
             opacity: 0.8;
         }
 
-        /* Hover-effekt för rensa chatt-knappen */
-        .clear-btn:hover { 
+        .clear-btn:hover {
             background: #ff4444;
             color: #000;
             box-shadow: 0 0 15px #ff4444;
             opacity: 1;
         }
-        
-        /* Active-effekt för rensa chatt-knappen */
-        .clear-btn:active { transform: scale(0.95); } 
-        
-        /* Anpassad modal för bekräftelse vid rensning */
-        .modal {
-            display: none; 
-            position: fixed;
-            z-index: 100;
-            left: 0; top: 0;
-            width: 100%; height: 100%;
-            background-color: rgba(0, 0, 0, 0.85);
-            backdrop-filter: blur(5px); 
+
+        .clear-btn:active {
+            transform: scale(0.95);
         }
 
-        /* Innehåll i modalen */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 100;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.85);
+            backdrop-filter: blur(5px);
+        }
+
         .modal-content {
             background-color: #000;
             margin: 15% auto;
@@ -288,21 +290,36 @@
             font-family: 'Courier New', monospace;
         }
 
-        /* Varningstext i modalen */
-        .modal-content h3 { animation: alert-flicker 1s infinite;}
-
-        /* Animation för varningstext */
-        @keyframes alert-flicker {
-            0% { opacity: 1; text-shadow: 0 0 10px #ff4444; }
-            50% { opacity: 0.5; text-shadow: none; }
-            100% { opacity: 1; text-shadow: 0 0 10px #ff4444; }
+        .modal-content h3 {
+            animation: alert-flicker 1s infinite;
         }
 
-        /* Knappar i modalen */
-        .modal-buttons { margin-top: 25px; display: flex; justify-content: space-around; }
+        @keyframes alert-flicker {
+            0% {
+                opacity: 1;
+                text-shadow: 0 0 10px #ff4444;
+            }
 
-        /* Bekräfta och avbryt knappar */
-        .confirm-btn, .cancel-btn {
+            50% {
+                opacity: 0.5;
+                text-shadow: none;
+            }
+
+            100% {
+                opacity: 1;
+                text-shadow: 0 0 10px #ff4444;
+            }
+        }
+
+        .modal-buttons {
+            margin-top: 25px;
+            display: flex;
+            justify-content: space-around;
+            gap: 12px;
+        }
+
+        .confirm-btn,
+        .cancel-btn {
             padding: 10px 20px;
             cursor: pointer;
             font-weight: bold;
@@ -311,37 +328,71 @@
             color: #ff4444;
         }
 
-        /* Hover-effekter för modalknappar */
-        .confirm-btn:hover { background: #ff4444; color: #000; }
-        .cancel-btn { border-color: #888; color: #888; }
-        .cancel-btn:hover { background: #444; color: #fff; }
+        .confirm-btn:hover {
+            background: #ff4444;
+            color: #000;
+        }
 
-        /* Stil för användarens egna meddelanden */
+        .cancel-btn {
+            border-color: #888;
+            color: #888;
+        }
+
+        .cancel-btn:hover {
+            background: #444;
+            color: #fff;
+        }
+
         .self-label {
-            color: #fff !important; 
-            text-shadow: 0 0 10px #00ff00, 0 0 20px #00ff00; 
+            color: #fff !important;
+            text-shadow: 0 0 10px #00ff00, 0 0 20px #00ff00;
             font-weight: 900;
             letter-spacing: 1px;
         }
 
+        @media (max-width: 560px) {
+            .top-row {
+                align-items: flex-start;
+                flex-direction: column;
+            }
+
+            .input-group {
+                flex-direction: column;
+                gap: 10px;
+            }
+
+            .send-btn {
+                width: 100%;
+                height: 52px;
+            }
+
+            .modal-content {
+                width: min(100% - 48px, 350px);
+                box-sizing: border-box;
+            }
+
+            .modal-buttons {
+                flex-direction: column;
+            }
+        }
     </style>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js"></script>
 </head>
 <body>
     <div id="matrix-rain"></div>
-    
+
     <h2 id="chat-header">MATRIX CHATT</h2>
-    
+
     <div id="chat"></div>
-    
+
     <div class="controls">
-        <div style="display: flex; justify-content: space-between; align-items: flex-end; width: 100%;">
+        <div class="top-row">
             <div class="user-badge">
                 <input id="username" type="text" value="{{ username }}" readonly>
             </div>
             <div id="digital-clock">00:00:00</div>
         </div>
-        
+
         <div class="input-group">
             <input id="user_input" type="text" placeholder="Skriv ett meddelande..." autofocus>
             <button class="send-btn" onclick="sendMessage()">Skicka</button>
@@ -353,10 +404,10 @@
     <div id="custom-modal" class="modal">
         <div class="modal-content">
             <h3 style="color: #ff4444; margin-top: 0;">SYSTEM VARNING</h3>
-            <p>Är du säker på att du vill radera all chatt historik?</p>
+            <p>Är du säker på att du vill radera all chatthistorik?</p>
             <div class="modal-buttons">
-                <button class="confirm-btn" onclick="executeClear()">BEKRÄFTA</button>
-                <button class="cancel-btn" onclick="closeModal()">AVBRYT</button>
+                <button class="confirm-btn" onclick="executeClear()">Bekräfta</button>
+                <button class="cancel-btn" onclick="closeModal()">Avbryt</button>
             </div>
         </div>
     </div>
@@ -367,26 +418,31 @@
         var warningSound = new Audio('/static/alarm.mp3');
         warningSound.loop = true;
 
-        /* Lägg till meddelande i chattrutan */
         function addMessage(data) {
             var chatDiv = document.getElementById('chat');
             var item = document.createElement('div');
             item.className = 'msg-line';
-            
-            
+
             var currentUserName = document.getElementById('username').value;
-            
-            
-            var labelClass = (data.user === currentUserName) ? 'user-label self-label' : 'user-label';
-            
-            item.innerHTML = `
-                <span class="time-label">[${data.time || '--:--'}]</span>
-                <span class="${labelClass}">${data.user}:</span>
-                <span class="msg-content">${data.msg}</span>
-            `;
-            
+
+            var timeLabel = document.createElement('span');
+            timeLabel.className = 'time-label';
+            timeLabel.textContent = `[${data.time || '--:--'}]`;
+
+            var userLabel = document.createElement('span');
+            userLabel.className = (data.user === currentUserName) ? 'user-label self-label' : 'user-label';
+            userLabel.textContent = `${data.user}:`;
+
+            var messageContent = document.createElement('span');
+            messageContent.className = 'msg-content';
+            messageContent.textContent = data.msg || '';
+
+            item.appendChild(timeLabel);
+            item.appendChild(userLabel);
+            item.appendChild(messageContent);
+
             chatDiv.appendChild(item);
-            chatDiv.scrollTop = chatDiv.scrollHeight; 
+            chatDiv.scrollTop = chatDiv.scrollHeight;
         }
 
         socket.on('history', function(history) {
@@ -403,89 +459,95 @@
             document.getElementById('chat').innerHTML = '';
         });
 
-        /* Skicka meddelande-funktion */
         function sendMessage() {
-            var nameInput = document.getElementById('username');
             var msgInput = document.getElementById('user_input');
-            
-            if (msgInput.value.trim() !== "") {
+
+            if (msgInput.value.trim() !== '') {
                 socket.emit('message', {
-                    user: nameInput.value,
                     msg: msgInput.value
                 });
+
                 msgInput.value = '';
             }
         }
 
-        /* Rensa chatt-funktion */
         function clearChat() {
             warningSound.play().catch(function(error) {
-                console.log("Ljudet kunde inte spelas: ", error);
+                console.log('Ljudet kunde inte spelas: ', error);
             });
+
             document.getElementById('custom-modal').style.display = 'block';
         }
 
-        /* Stäng modal-funktion */
         function closeModal() {
             document.getElementById('custom-modal').style.display = 'none';
-            
+
             warningSound.pause();
             warningSound.currentTime = 0;
         }
 
-        /* Utför rensning av chatten */
         function executeClear() {
             socket.emit('clear_chat');
             closeModal();
         }
 
-        document.getElementById('user_input').addEventListener('keypress', function (e) {
-            if (e.key === 'Enter') sendMessage();
+        document.getElementById('user_input').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                sendMessage();
+            }
         });
 
-        /* DIGITAL KLOCKA */
         function updateClock() {
             const now = new Date();
             const h = String(now.getHours()).padStart(2, '0');
             const m = String(now.getMinutes()).padStart(2, '0');
             const s = String(now.getSeconds()).padStart(2, '0');
+
             document.getElementById('digital-clock').textContent = `${h}:${m}:${s}`;
         }
+
         setInterval(updateClock, 1000);
         updateClock();
 
-        /* Matrix-regnet */
         const matrixContainer = document.getElementById('matrix-rain');
         const canvas = document.createElement('canvas');
         const ctx = canvas.getContext('2d');
+
         matrixContainer.appendChild(canvas);
 
         let width = canvas.width = window.innerWidth;
         let height = canvas.height = window.innerHeight;
-        const font_size = 16;
-        const columns = width / font_size;
-        const drops = Array(Math.floor(columns)).fill(1);
+        const fontSize = 16;
+        let columns = Math.floor(width / fontSize);
+        let drops = Array(columns).fill(1);
         const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789@#$%^&*';
 
-        /* funktionen för matrix-regnet */
         function draw() {
             ctx.fillStyle = 'rgba(18, 18, 18, 0.05)';
             ctx.fillRect(0, 0, width, height);
             ctx.fillStyle = '#00ff00';
-            ctx.font = font_size + 'px monospace';
+            ctx.font = fontSize + 'px monospace';
 
             for (let i = 0; i < drops.length; i++) {
                 const text = chars[Math.floor(Math.random() * chars.length)];
-                ctx.fillText(text, i * font_size, drops[i] * font_size);
-                if (drops[i] * font_size > height && Math.random() > 0.975) drops[i] = 0;
+
+                ctx.fillText(text, i * fontSize, drops[i] * fontSize);
+
+                if (drops[i] * fontSize > height && Math.random() > 0.975) {
+                    drops[i] = 0;
+                }
+
                 drops[i]++;
             }
         }
+
         setInterval(draw, 33);
 
-        window.addEventListener('resize', () => {
+        window.addEventListener('resize', function() {
             width = canvas.width = window.innerWidth;
             height = canvas.height = window.innerHeight;
+            columns = Math.floor(width / fontSize);
+            drops = Array(columns).fill(1);
         });
     </script>
 </body>

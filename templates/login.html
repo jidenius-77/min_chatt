@@ -1,18 +1,76 @@
 <!DOCTYPE html>
 <html>
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Matrix Login</title>
     <style>
-        body { background: #121212; color: #00ff00; font-family: monospace; display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; margin: 0; }
-        .login-box { border: 2px solid #00ff00; padding: 30px; border-radius: 8px; box-shadow: 0 0 20px rgba(0,255,0,0.2); text-align: center; }
-        input { display: block; margin: 10px auto; padding: 10px; background: #222; border: 1px solid #00ff00; color: #00ff00; border-radius: 4px; }
-        button { background: #00ff00; color: black; border: none; padding: 10px 20px; font-weight: bold; cursor: pointer; border-radius: 4px; }
-        button:hover { background: #008800; }
+        body {
+            background: #121212;
+            color: #00ff00;
+            font-family: monospace;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 16px;
+            box-sizing: border-box;
+        }
+
+        .login-box {
+            border: 2px solid #00ff00;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 0 20px rgba(0, 255, 0, 0.2);
+            text-align: center;
+            width: min(100%, 360px);
+            box-sizing: border-box;
+        }
+
+        input {
+            display: block;
+            width: 100%;
+            box-sizing: border-box;
+            margin: 10px auto;
+            padding: 10px;
+            background: #222;
+            border: 1px solid #00ff00;
+            color: #00ff00;
+            border-radius: 4px;
+        }
+
+        button {
+            background: #00ff00;
+            color: black;
+            border: none;
+            padding: 10px 20px;
+            font-weight: bold;
+            cursor: pointer;
+            border-radius: 4px;
+        }
+
+        button:hover {
+            background: #008800;
+        }
+
+        .error {
+            color: #ff4444;
+            border: 1px solid #ff4444;
+            padding: 10px;
+            margin-bottom: 16px;
+        }
     </style>
 </head>
 <body>
     <div class="login-box">
         <h1>ACCESS REQUIRED</h1>
+
+        {% if error %}
+            <p class="error">ACCESS DENIED: fel namn eller lösenord.</p>
+        {% endif %}
+
         <form method="POST">
             <input type="text" name="username" placeholder="Välj ett namn" required>
             <input type="password" name="password" placeholder="Lösenord" required>
